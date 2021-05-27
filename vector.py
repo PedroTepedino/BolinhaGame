@@ -1,7 +1,6 @@
 import math
 from graphics import Point
 
-
 class Vector:
     def __init__(self, x: float, y: float):
         self.x = x
@@ -16,7 +15,7 @@ class Vector:
     def __truediv__(self, other: float):
         return Vector(self.x / other, self.y / other)
 
-    def __abs__(self):
+    def normalized(self):
         return self / self.mag()
 
     def __mul__(self, other: float):

@@ -5,17 +5,24 @@ O menu será inserido em uma janela de 800x600, possuindo assim,
 3 retangulos do meio pra baixo (play, credits, exit), um texto centralizado em cima, "Bolinha Game",
 e uma bolinha no fundo indo e voltando batendo nas paredes.
 """
+
+class Menu:
+   def __init__(self, window: GraphWin):
+      pass
+
+   def update(self, window: GraphWin):
+      pass
+
+
 # win: para definir a janela
 # rets: para os retangulos
 # t: para o texto
 def menu():
    win = GraphWin("MENU", 800, 600)
 
-
    ret1 = Rectangle(Point(300, 300), Point(500, 250))
    ret1.setOutline("black")
    ret1.draw(win)
-
 
    ret2 = Rectangle(Point(300, 375), Point(500,325))
    ret2.setOutline("black")
@@ -66,7 +73,6 @@ def menu():
          print("Credits")
       else:
          print("Do nothing")
-
 
       x4, y4 = ret3.getP1().getX(), ret3.getP1().getY()
       x5, y5 = ret3.getP2().getX(), ret3.getP2().getY()
