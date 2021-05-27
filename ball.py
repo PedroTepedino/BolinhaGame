@@ -28,11 +28,15 @@ class Ball:
 
         self.position += self.velocity
 
-        hight_diference = (self.position.y + self.radius) - (player.position.y - player.half_size.y)
-        width_check = self.position.x + self.radius <= player.position.x + player.half_size.x and self.position.x - self.radius >= player.position.x - player.half_size.x
-
-        if hight_diference >= 0 and width_check:
-            self.position -= Vector(0, hight_diference)
-            self.velocity = Vector(self.velocity.x, -self.velocity.y)
+        self.collide_player(player)
 
         self.draw(window)
+
+    def collide_player(self, player: Player):
+        height_difference = (self.position.y + self.radius) - (player.position.y - player.half_size.y)
+        width_check = self.position.x + self.radius <= player.position.x + player.half_size.x and self.position.x - self.radius >= player.position.x - player.half_size.x
+
+        # Check collision
+        if height_difference >= 0 and width_check:
+            self.position -= Vector(0, height_difference)
+            self.velocity = Vector(self.velocity.x, -self.velocity.y)
