@@ -1,7 +1,57 @@
+import random
+
 from graphics import *
 
-
+win = GraphWin("Bolinha Game", 800, 600)
 def draw_ui(window: GraphWin):
-    line = Line(Point(0, 0), Point(300, 300))
-    line.setFill("green")
-    line.draw(window)
+    linhaSuperior = Line(Point(0, 25), Point(800, 25))
+    linhaSuperior.setWidth(50)
+    linhaSuperior.setFill(color_rgb(50, 50, 180))
+    linhaSuperior.draw(window)
+
+    linhaInferior = Line(Point(0, 575), Point(800, 575))
+    linhaInferior.setWidth(50)
+    linhaInferior.setFill(color_rgb(250, 80, 80))
+    linhaInferior.draw(window)
+
+    linhaDireita = Line(Point(800, 50), Point(800, 550))
+    linhaDireita.setWidth(25)
+    linhaDireita.setFill(color_rgb(50, 50, 50))
+    linhaDireita.draw(window)
+
+    linhaEsquerda = Line(Point(0, 50), Point(0, 550))
+    linhaEsquerda.setWidth(25)
+    linhaEsquerda.setFill(color_rgb(50, 50, 50))
+    linhaEsquerda.draw(window)
+
+    fogo = Image(Point(150, 575), 'fogo.PNG')
+    fogo2 = Image(Point(450, 575), 'fogo.PNG')
+    fogo3 = Image(Point(750, 575), 'fogo.PNG')
+    cloud = Image(Point(110, 25), 'cloud.JPG')
+    cloud2 = Image(Point(310, 25), 'cloud.JPG')
+    cloud3 = Image(Point(510, 25), 'cloud.JPG')
+    cloud4 = Image(Point(700, 25), 'cloud.JPG')
+    diabin = Image(Point(200, 555), 'diabin.PNG')
+    diabin2 = Image(Point(600, 560), 'diabin.PNG')
+    cloud.draw(win)
+    cloud2.draw(win)
+    cloud3.draw(win)
+    cloud4.draw(win)
+    fogo.draw(win)
+    fogo2.draw(win)
+    fogo3.draw(win)
+    diabin.draw(win)
+    diabin2.draw(win)
+    win.setBackground('gray')
+
+draw_ui(win)
+playing = True
+
+while playing:
+    key = win.checkKey()
+
+    if key == "Escape":
+        playing = False
+
+win.close()
+
