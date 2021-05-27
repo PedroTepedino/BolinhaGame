@@ -1,7 +1,8 @@
-from graphics import Point
 from graphics import GraphWin
 from graphics import Circle
 from vector import Vector
+from player import Player
+
 
 class Ball:
 
@@ -18,7 +19,7 @@ class Ball:
         self.sprite.setFill("green")
         self.sprite.draw(window)
 
-    def update(self, window: GraphWin):
+    def update(self, window: GraphWin, player: Player):
         if self.position.x - self.radius <= 0 or self.position.x + self.radius >= window.width:
             self.velocity = Vector(-self.velocity.x, self.velocity.y)
 
@@ -26,4 +27,12 @@ class Ball:
             self.velocity = Vector(self.velocity.x, -self.velocity.y)
 
         self.position += self.velocity
+
+        hight_diference = (self.position.y + self.radius) - (player.position.y - player.half_size.y)
+        width_check = self.position.x + self.radius <= player.position.x + player.half_size.x and self.position.x - self.radius >= player.position.x - player.half_size.x
+
+        if hight_diference >= 0 and width_check:
+            self.position -= Vector(0, hight_diference)
+            self.velocity = Vector(self.velocity.x, -self.velocity.y)
+
         self.draw(window)

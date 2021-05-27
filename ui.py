@@ -1,8 +1,7 @@
 import random
-
 from graphics import *
 
-win = GraphWin("Bolinha Game", 800, 600)
+
 def draw_ui(window: GraphWin):
     linhaSuperior = Line(Point(0, 25), Point(800, 25))
     linhaSuperior.setWidth(50)
@@ -33,25 +32,25 @@ def draw_ui(window: GraphWin):
     cloud4 = Image(Point(700, 25), 'cloud.JPG')
     diabin = Image(Point(200, 555), 'diabin.PNG')
     diabin2 = Image(Point(600, 560), 'diabin.PNG')
-    cloud.draw(win)
-    cloud2.draw(win)
-    cloud3.draw(win)
-    cloud4.draw(win)
-    fogo.draw(win)
-    fogo2.draw(win)
-    fogo3.draw(win)
-    diabin.draw(win)
-    diabin2.draw(win)
-    win.setBackground('gray')
+    cloud.draw(window)
+    cloud2.draw(window)
+    cloud3.draw(window)
+    cloud4.draw(window)
+    fogo.draw(window)
+    fogo2.draw(window)
+    fogo3.draw(window)
+    diabin.draw(window)
+    diabin2.draw(window)
+    window.setBackground('gray')
 
-draw_ui(win)
-playing = True
-
-while playing:
-    key = win.checkKey()
-
-    if key == "Escape":
-        playing = False
-
-win.close()
-
+# win = GraphWin("Bolinha Game", 800, 600)
+# draw_ui(win)
+# playing = True
+#
+# while playing:
+#     key = win.checkKey()
+#
+#     if key == "Escape":
+#         playing = False
+#
+# win.close()
