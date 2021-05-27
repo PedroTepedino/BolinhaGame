@@ -11,7 +11,7 @@ class Ball:
         self.position = pos
         self.radius = rad
         self.speed = vel
-        self.velocity = Vector(1, 1) * vel
+        self.velocity = Vector(0, 1) * vel
         self.sprite = Circle(self.position.to_point(), self.radius)
         self.score = score
 
@@ -28,25 +28,49 @@ class Ball:
         if self.position.y - self.radius <= 0 or self.position.y + self.radius >= window.height:
             self.velocity = Vector(self.velocity.x, -self.velocity.y)
 
-        #self.position += self.velocity
+        new_position = self.collide_player(player)
 
-        self.collide_player(player)
+        self.position = new_position
 
         self.draw(window)
 
     def collide_player(self, player: Player):
-        # height_difference = (self.position.y + self.radius) - (player.position.y - player.half_size.y)
-        # width_check = self.position.x + self.radius <= player.position.x + player.half_size.x and self.position.x - self.radius >= player.position.x - player.half_size.x
-        # height_check = height_difference >= 0 and (self.position.y + self.radius)
-        #
-        # # Check collision
-        # if height_difference >= 0 and width_check:
-        #     self.position -= Vector(0, height_difference)
-        #     self.velocity = Vector(self.velocity.x, -self.velocity.y)
-        #     self.score.add_score()
 
         potential_position = self.position + self.velocity
 
         nearest_point = Vector(0, 0)
-        
+        nearest_point.x = max(player.position.x - player.half_size.x, min(potential_position.x, player.position.x + player.half_size.x))
+        nearest_point.y = max(player.position.y - player.half_size.y, min(potential_position.y, player.position.y + player.half_size.y))
 
+        ray_to_nearest = nearest_point - potential_position
+        overlap = self.radius - ray_to_nearest.mag()
+
+        if ray_to_nearest.mag() == 0:
+            overlap = 0
+
+        if overlap >= 0:
+            potential_position = potential_position - (ray_to_nearest.normalized() * overlap)
+
+            right = (Vector(1, 0)).cos_angle(potential_position - player.position)
+            right_rec = (Vector(1, 0)).cos_angle(Vector(player.half_size.x, -player.half_size.y))
+            left_rec = (Vector(1, 0)).cos_angle(Vector(-player.half_size.x, -player.half_size.y))
+
+            collided_top = left_rec <= right <= right_rec
+
+            top = (Vector(0, 1)).cos_angle(potential_position - player.position)
+            down_rec = (Vector(0, 1)).cos_angle(Vector(-player.half_size.x, player.half_size.y))
+            top_rec = (Vector(0, 1)).cos_angle(Vector(-player.half_size.x, -player.half_size.y))
+
+            collided_right = top_rec <= top <= down_rec
+
+            if collided_top:
+                self.velocity = Vector(self.velocity.x, -self.velocity.y)
+                # self.speed += 10
+                # self.velocity = self.velocity.normalized() * self.speed
+
+            if collided_right:
+                self.velocity = Vector(-self.velocity.x, self.velocity.y)
+                # self.speed += 10
+                # self.velocity = self.velocity.normalized() * self.speed
+
+        return potential_position

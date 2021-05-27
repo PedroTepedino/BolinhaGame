@@ -1,3 +1,5 @@
+import random
+
 from graphics import *
 from ui import *
 from ball import Ball
@@ -45,6 +47,8 @@ while playing:
 
     player.update(win)
     ball.update(win, player)
+
+    print(ball.speed)
 
     time.sleep(frame_rate)
 
