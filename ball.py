@@ -7,11 +7,11 @@ from score import Score
 
 class Ball:
 
-    def __init__(self, pos: Vector, rad: float, vel: float, score: Score):
-        self.position = pos
-        self.radius = rad
-        self.speed = vel
-        self.velocity = Vector(0, 1) * vel
+    def __init__(self, initial_position: Vector, radius: float, speed: float, initial_direction: Vector, score: Score):
+        self.position = initial_position
+        self.radius = radius
+        self.speed = speed
+        self.velocity = initial_direction * speed
         self.sprite = Circle(self.position.to_point(), self.radius)
         self.score = score
 
@@ -30,17 +30,21 @@ class Ball:
 
         new_position = self.collide_player(player)
 
+        self.sprite.move(new_position.x - self.position.x, new_position.y - self.position.y)
+
         self.position = new_position
 
-        self.draw(window)
+        # self.draw(window)
 
     def collide_player(self, player: Player):
 
         potential_position = self.position + self.velocity
 
         nearest_point = Vector(0, 0)
-        nearest_point.x = max(player.position.x - player.half_size.x, min(potential_position.x, player.position.x + player.half_size.x))
-        nearest_point.y = max(player.position.y - player.half_size.y, min(potential_position.y, player.position.y + player.half_size.y))
+        nearest_point.x = max(player.position.x - player.half_size.x,
+                              min(potential_position.x, player.position.x + player.half_size.x))
+        nearest_point.y = max(player.position.y - player.half_size.y,
+                              min(potential_position.y, player.position.y + player.half_size.y))
 
         ray_to_nearest = nearest_point - potential_position
         overlap = self.radius - ray_to_nearest.mag()

@@ -9,6 +9,7 @@ class Player:
         self.speed = speed
         self.sprite = Rectangle((pos + half_size).to_point(), (pos - half_size).to_point())
         self.move_velocity = Vector(1, 0) * speed
+        self.new_position = pos
 
     def draw(self, window: GraphWin):
         self.sprite.undraw()
@@ -17,15 +18,20 @@ class Player:
         self.sprite.draw(window)
 
     def move_right(self):
-        self.position += self.move_velocity
+        self.new_position = self.position + self.move_velocity
 
     def move_left(self):
-        self.position -= self.move_velocity
+        self.new_position = self.position - self.move_velocity
 
     def update(self, window: GraphWin):
-        if self.position.x + self.half_size.x >= window.width:
-            self.position = Vector(window.width - self.half_size.x, self.position.y)
-        elif self.position.x - self.half_size.x <= 0:
-            self.position = Vector(0 + self.half_size.x, self.position.y)
+        if self.new_position.x + self.half_size.x >= window.width:
+            self.new_position = Vector(window.width - self.half_size.x, self.position.y)
+        elif self.new_position.x - self.half_size.x <= 0:
+            self.new_position = Vector(0 + self.half_size.x, self.position.y)
 
-        self.draw(window)
+        delta_position = self.new_position - self.position
+        self.sprite.move(delta_position.x, delta_position.y)
+
+        self.position = self.new_position
+
+        # self.draw(window)
