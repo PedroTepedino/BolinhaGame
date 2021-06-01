@@ -17,6 +17,9 @@ class Player:
         self.sprite.setFill('black')
         self.sprite.draw(window)
 
+    def undraw(self):
+        self.sprite.undraw()
+
     def move_right(self):
         self.new_position = self.position + self.move_velocity
 
@@ -35,3 +38,5 @@ class Player:
         self.position = self.new_position
 
         # self.draw(window)
+
+

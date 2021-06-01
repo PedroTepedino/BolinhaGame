@@ -4,6 +4,7 @@ import random
 from scene import Scene
 from button import Button
 from vector import Vector
+from animatedBall import AnimaBola
 
 """
 O menu será inserido em uma janela de 800x600, possuindo assim, 
@@ -17,65 +18,48 @@ class Menu(Scene):
     def __init__(self, window: GraphWin, play_func, credits_func, exit_func):
         self.win = window
 
-        self.mouse_position = Vector(0, 0)
-        self.mouse_click = None
-
-        self.title = Text(Point(400, 150), "Bolinha Game!")
+        self.title = Text(Point(405, 150), "Little Ball Game!")
         self.title.setSize(30)
 
         self.play_button = Button(window, play_func, Vector(400, 275), Vector(75, 25), "Play")
         self.credits_button = Button(window, credits_func, Vector(400, 350), Vector(75, 25), "Credits")
         self.exit_button = Button(window, exit_func, Vector(400, 425), Vector(75, 25), "Exit")
 
+        self.bolas = []
+
+        for _ in range(50):
+            self.bola = AnimaBola(window,
+                                  initial_position=Vector(random.randint(50, 750), random.randint(50, 550)),
+                                  initial_direction=Vector(random.randrange(-10, 10), random.randrange(-10, 10)),
+                                  is_color_random=True
+                                  )
+            self.bolas.append(self.bola)
+
+        self.win.setBackground('gray')
+
     def draw(self):
+        for bola in self.bolas:
+            bola.draw()
         self.title.draw(self.win)
         self.play_button.draw()
         self.credits_button.draw()
         self.exit_button.draw()
 
-
     def undraw(self):
+        for bola in self.bolas:
+            bola.undraw()
         self.title.undraw()
         self.play_button.undraw()
         self.credits_button.undraw()
         self.exit_button.undraw()
 
-    def tick(self):
-        self.play_button.tick(self.mouse_position, self.mouse_click)
-        self.credits_button.tick(self.mouse_position, self.mouse_click)
-        self.exit_button.tick(self.mouse_position, self.mouse_click)
+    def tick(self, mouse_position: Vector, mouse_click_position):
+        self.play_button.tick(mouse_position, mouse_click_position)
+        self.credits_button.tick(mouse_position, mouse_click_position)
+        self.exit_button.tick(mouse_position, mouse_click_position)
 
-        # point = self.win.getMouse()
-        # px, py = point.getX(), point.getY()
-        #
-        # x0, y0 = self.ret1.getP1().getX(), self.ret1.getP1().getY()
-        # x1, y1 = self.ret1.getP2().getX(), self.ret1.getP2().getY()
-        #
-        # if ((min(x0, x1) <= px <= max(x0, x1)) and
-        #         (min(y0, y1) <= py <= max(y0, y1))):
-        #     print("Play")
-        # else:
-        #     print("Do nothing")
-        #
-        # x2, y2 = self.ret2.getP1().getX(), self.ret2.getP1().getY()
-        # x3, y3 = self.ret2.getP2().getX(), self.ret2.getP2().getY()
-        #
-        # if ((min(x2, x3) <= px <= max(x2, x3)) and
-        #         (min(y2, y3) <= py <= max(y2, y3))):
-        #     print("Credits")
-        # else:
-        #     print("Do nothing")
-        #
-        # x4, y4 = self.ret3.getP1().getX(), self.ret3.getP1().getY()
-        # x5, y5 = self.ret3.getP2().getX(), self.ret3.getP2().getY()
-        #
-        # if ((min(x4, x5) <= px <= max(x4, x5)) and
-        #         (min(y4, y5) <= py <= max(y4, y5))):
-        #     print("Exit")
-        # else:
-        #     print("Do nothing")
-
-
+        for bola in self.bolas:
+            bola.update()
 
 
 # class Menu(Scene):

@@ -8,18 +8,29 @@ from score import Score
 class Ball:
 
     def __init__(self, initial_position: Vector, radius: float, speed: float, initial_direction: Vector, score: Score):
-        self.position = initial_position
+        self.initial_direction = initial_direction
+        self.initial_position = initial_position
         self.radius = radius
         self.speed = speed
-        self.velocity = initial_direction * speed
-        self.sprite = Circle(self.position.to_point(), self.radius)
         self.score = score
+
+        self.position = self.initial_position
+        self.velocity = self.initial_direction * speed
+
+        self.sprite = Circle(self.position.to_point(), self.radius)
 
     def draw(self, window: GraphWin):
         self.sprite.undraw()
         self.sprite = Circle(self.position.to_point(), self.radius)
         self.sprite.setFill("green")
         self.sprite.draw(window)
+
+    def undraw(self):
+        self.sprite.undraw()
+
+    def reset(self):
+        self.position = self.initial_position
+        self.velocity = self.initial_direction * self.speed
 
     def update(self, window: GraphWin, player: Player):
         if self.position.x - self.radius <= 0 or self.position.x + self.radius >= window.width:
@@ -33,8 +44,6 @@ class Ball:
         self.sprite.move(new_position.x - self.position.x, new_position.y - self.position.y)
 
         self.position = new_position
-
-        # self.draw(window)
 
     def collide_player(self, player: Player):
 
@@ -76,5 +85,7 @@ class Ball:
                 self.velocity = Vector(-self.velocity.x, self.velocity.y)
                 # self.speed += 10
                 # self.velocity = self.velocity.normalized() * self.speed
+
+            self.score.add_score()
 
         return potential_position

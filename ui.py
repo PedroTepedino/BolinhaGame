@@ -3,45 +3,60 @@ from graphics import *
 
 
 def draw_ui(window: GraphWin):
-    linhaSuperior = Line(Point(0, 25), Point(800, 25))
-    linhaSuperior.setWidth(50)
-    linhaSuperior.setFill(color_rgb(50, 50, 180))
-    linhaSuperior.draw(window)
+    linha_superior = Line(Point(0, 25), Point(800, 25))
+    linha_superior.setWidth(50)
+    linha_superior.setFill(color_rgb(50, 50, 180))
+    linha_superior.draw(window)
 
-    linhaInferior = Line(Point(0, 575), Point(800, 575))
-    linhaInferior.setWidth(50)
-    linhaInferior.setFill(color_rgb(250, 80, 80))
-    linhaInferior.draw(window)
+    linha_inferior = Line(Point(0, 575), Point(800, 575))
+    linha_inferior.setWidth(50)
+    linha_inferior.setFill(color_rgb(250, 80, 80))
+    linha_inferior.draw(window)
 
-    linhaDireita = Line(Point(800, 50), Point(800, 550))
-    linhaDireita.setWidth(25)
-    linhaDireita.setFill(color_rgb(50, 50, 50))
-    linhaDireita.draw(window)
+    linha_direita = Line(Point(800, 50), Point(800, 550))
+    linha_direita.setWidth(25)
+    linha_direita.setFill(color_rgb(50, 50, 50))
+    linha_direita.draw(window)
 
-    linhaEsquerda = Line(Point(0, 50), Point(0, 550))
-    linhaEsquerda.setWidth(25)
-    linhaEsquerda.setFill(color_rgb(50, 50, 50))
-    linhaEsquerda.draw(window)
+    linha_esquerda = Line(Point(0, 50), Point(0, 550))
+    linha_esquerda.setWidth(25)
+    linha_esquerda.setFill(color_rgb(50, 50, 50))
+    linha_esquerda.draw(window)
 
-    fogo = Image(Point(150, 575), 'fogo.PNG')
-    fogo2 = Image(Point(450, 575), 'fogo.PNG')
-    fogo3 = Image(Point(750, 575), 'fogo.PNG')
-    cloud = Image(Point(110, 25), 'cloud.JPG')
-    cloud2 = Image(Point(310, 25), 'cloud.JPG')
-    cloud3 = Image(Point(510, 25), 'cloud.JPG')
-    cloud4 = Image(Point(700, 25), 'cloud.JPG')
-    diabin = Image(Point(200, 555), 'diabin.PNG')
-    diabin2 = Image(Point(600, 560), 'diabin.PNG')
-    cloud.draw(window)
-    cloud2.draw(window)
-    cloud3.draw(window)
-    cloud4.draw(window)
-    fogo.draw(window)
-    fogo2.draw(window)
-    fogo3.draw(window)
-    diabin.draw(window)
-    diabin2.draw(window)
+    fogos = []
+    for i in range(3):
+        fogos.append(Image(Point(150 + (300 * i), 575), 'fogo.PNG'))
+        fogos[i].draw(window)
+
+    clouds = []
+    for i in range(4):
+        clouds.append(Image(Point(110 + (200 * i), 25), 'cloud.JPG'))
+        clouds[i].draw(window)
+
+    diabins = [Image(Point(200, 555), 'diabin.PNG'), Image(Point(600, 560), 'diabin.PNG')]
+
+    for i in range(len(diabins)):
+        diabins[i].draw(window)
+
     window.setBackground('gray')
+    # fogo = Image(Point(150, 575), 'fogo.PNG')
+    # fogo2 = Image(Point(450, 575), 'fogo.PNG')
+    # fogo3 = Image(Point(750, 575), 'fogo.PNG')
+    # cloud = Image(Point(110, 25), 'cloud.JPG')
+    # cloud2 = Image(Point(310, 25), 'cloud.JPG')
+    # cloud3 = Image(Point(510, 25), 'cloud.JPG')
+    # cloud4 = Image(Point(700, 25), 'cloud.JPG')
+    # diabin = Image(Point(200, 555), 'diabin.PNG')
+    # diabin2 = Image(Point(600, 560), 'diabin.PNG')
+    # cloud.draw(window)
+    # cloud2.draw(window)
+    # cloud3.draw(window)
+    # cloud4.draw(window)
+    # fogo.draw(window)
+    # fogo2.draw(window)
+    # fogo3.draw(window)
+    # diabin.draw(window)
+    # diabin2.draw(window)
 
 # win = GraphWin("Bolinha Game", 800, 600)
 # draw_ui(win)

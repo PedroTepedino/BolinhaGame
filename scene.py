@@ -1,5 +1,7 @@
 import abc
 
+from vector import Vector
+
 
 class Scene(metaclass=abc.ABCMeta):
     @abc.abstractmethod
@@ -11,5 +13,5 @@ class Scene(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def tick(self):
+    def tick(self, mouse_position: Vector, mouse_click_position):
         pass
