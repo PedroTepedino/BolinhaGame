@@ -22,8 +22,7 @@ class Score:
 
     def reset(self):
         self.pts = 0
-        self.undraw()
-        self.draw()
+        self.pontos.setText(f"Pontos: {self.pts}")
 
 # def score(pts, pontos, win):
 #     pts += 1

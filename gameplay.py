@@ -24,6 +24,7 @@ class Gameplay(Scene):
 
         self.score_ui = ScoreUi(self.window, restart_function, back_to_menu_function, exit_function, self.score)
         self.pause_ui = PauseUi(self.window, unpause_function, back_to_menu_function, exit_function)
+        self.lives_ui = LivesUi(self.window, self.lives, Vector(10, 10), Vector(20, 0))
 
         self.linha_esquerda = Line(Point(0, 50), Point(0, 550))
         self.linha_direita = Line(Point(800, 50), Point(800, 550))
@@ -71,9 +72,12 @@ class Gameplay(Scene):
         for i in range(len(self.diabins)):
             self.diabins[i].draw(self.window)
 
+        self.lives_ui.show()
+
         self.player.draw(self.window)
         self.ball.draw(self.window)
         self.score.draw()
+
 
     def undraw(self):
         self.paused = False
@@ -84,6 +88,7 @@ class Gameplay(Scene):
 
         self.pause_ui.hide()
         self.score_ui.hide()
+        self.lives_ui.hide()
 
         self.linha_superior.undraw()
         self.linha_inferior.undraw()
@@ -127,15 +132,19 @@ class Gameplay(Scene):
 
     def restart(self):
         self.lives = 3
+        self.lives_ui.current_lives = self.lives
+
         self.lost = False
         self.paused = False
         self.started = False
+
         self.score.reset()
         self.ball.reset()
 
     def lose_life(self):
         self.lives -= 1
         self.ball.reset()
+        self.lives_ui.update_lives(self.lives)
 
         if self.lives <= 0:
             self.lost = True
@@ -241,6 +250,7 @@ class LivesUi:
         self.lives_sprites = []
         for i in range(self.max_lives):
             self.lives_sprites.append(Circle((initial_position + (spacing * i)).to_point(), 10))
+            self.lives_sprites[i].setFill("green")
 
     def update_lives(self, lives: int):
         self.hide()
