@@ -1,3 +1,4 @@
+from highscore import HighScore
 import random
 from graphics import *
 from menu import Menu
@@ -5,6 +6,7 @@ from gameplay import Gameplay
 from ui import *
 from vector import Vector
 import time
+from highscore import HighScore
 
 current_mouse_position = Vector(0, 0)
 
@@ -23,8 +25,10 @@ class BolinhaGame:
         self.win = GraphWin("Bolinha Game", 800, 600)
         self.win.bind('<Motion>', motion)
 
+        self.highscore = HighScore()
+
         self.menu_scene = Menu(self.win, self.begin_gameplay, self.credits_switch, self.exit_game)
-        self.gameplay_scene = Gameplay(self.win, self.pause, self.back_to_menu, self.exit_game, self.restart)
+        self.gameplay_scene = Gameplay(self.win, self.pause, self.back_to_menu, self.exit_game, self.restart, self.highscore)
 
         self.menu_scene.draw()
 
