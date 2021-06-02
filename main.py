@@ -27,7 +27,7 @@ class BolinhaGame:
 
         self.highscore = HighScore()
 
-        self.menu_scene = Menu(self.win, self.begin_gameplay, self.credits_switch, self.exit_game)
+        self.menu_scene = Menu(self.win, self.begin_gameplay, self.credits_switch, self.exit_game, self.credits_switch)
         self.gameplay_scene = Gameplay(self.win, self.pause, self.back_to_menu, self.exit_game, self.restart, self.highscore)
 
         self.menu_scene.draw()
@@ -66,7 +66,7 @@ class BolinhaGame:
         self.change_scene("play")
 
     def credits_switch(self):
-        pass
+        self.menu_scene.credits()
 
     def exit_game(self):
         self.playing = False
