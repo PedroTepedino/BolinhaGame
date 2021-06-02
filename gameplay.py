@@ -6,11 +6,12 @@ from graphics import *
 from abstractui import AbstractUi
 from score import Score
 from vector import Vector
+from highscore import HighScore
 
 
 class Gameplay(Scene):
 
-    def __init__(self, window: GraphWin, unpause_function, back_to_menu_function, exit_function, restart_function):
+    def __init__(self, window: GraphWin, unpause_function, back_to_menu_function, exit_function, restart_function, highscore: HighScore):
         self.window = window
 
         self.lives = 3
@@ -19,10 +20,11 @@ class Gameplay(Scene):
         self.started = False
 
         self.score = Score(self.window)
+
         self.ball = Ball(self.window, Vector(400, 15), 10, 10, Vector(1, -1).normalized(), self.score, self.lose_life)
         self.player = Player(Vector(400, 500), Vector(50, 3), 10)
 
-        self.score_ui = ScoreUi(self.window, restart_function, back_to_menu_function, exit_function, self.score)
+        self.score_ui = ScoreUi(self.window, restart_function, back_to_menu_function, exit_function, self.score, highscore)
         self.pause_ui = PauseUi(self.window, unpause_function, back_to_menu_function, exit_function)
         self.lives_ui = LivesUi(self.window, self.lives, Vector(10, 10), Vector(20, 0))
 
@@ -31,7 +33,7 @@ class Gameplay(Scene):
         self.linha_inferior = Line(Point(0, 575), Point(800, 575))
         self.linha_superior = Line(Point(0, 25), Point(800, 25))
 
-        self.diabins = [Image(Point(200, 555), 'diabin.PNG'), Image(Point(600, 560), 'diabin.PNG')]
+        self.diabins = [Image(Point(200, 555), '_imagens/diabin.PNG'), Image(Point(600, 560), '_imagens/diabin.PNG')]
         self.clouds = []
         self.fogos = []
 
@@ -48,10 +50,10 @@ class Gameplay(Scene):
         self.linha_esquerda.setFill(color_rgb(50, 50, 50))
 
         for i in range(3):
-            self.fogos.append(Image(Point(150 + (300 * i), 575), 'fogo.PNG'))
+            self.fogos.append(Image(Point(150 + (300 * i), 575), '_imagens/fogo.PNG'))
 
         for i in range(4):
-            self.clouds.append(Image(Point(110 + (200 * i), 25), 'cloud.JPG'))
+            self.clouds.append(Image(Point(110 + (200 * i), 25), '_imagens/cloud.JPG'))
 
         self.window.setBackground('gray')
 
@@ -197,10 +199,12 @@ class ScoreUi(AbstractUi):
                  restart_function,
                  back_to_menu_function,
                  exit_function,
-                 score: Score):
+                 score: Score,
+                 high_score: HighScore):
         self.window = window
 
         self.score = score
+        self.highscore = high_score
 
         self.panel = Rectangle(Point(200, 100), Point(600, 500))
         self.panel.setFill(color_rgb(190, 190, 190))
@@ -215,7 +219,10 @@ class ScoreUi(AbstractUi):
         self.title.setSize(30)
 
         self.score_text = Text(Point(405, 175), "0")
-        self.title.setSize(30)
+        self.score_text.setSize(30)
+
+        self.highscore_text = Text(Point(405, 200), "0")
+        self.highscore_text.setSize(30)
 
     def show(self):
         self.panel.draw(self.window)
@@ -225,6 +232,9 @@ class ScoreUi(AbstractUi):
         self.title.draw(self.window)
         self.score_text.setText(f"{self.score.pts}")
         self.score_text.draw(self.window)
+        self.highscore.set_high_score(self.score.pts)
+        self.highscore_text.setText(f"HighScore: {self.highscore.high_score}")
+        self.highscore_text.draw(self.window)
 
     def hide(self):
         self.panel.undraw()
@@ -233,6 +243,7 @@ class ScoreUi(AbstractUi):
         self.exit_button.undraw()
         self.title.undraw()
         self.score_text.undraw()
+        self.highscore_text.undraw()
 
     def update(self, mouse_position: Vector, mouse_click_position):
         self.restart_button.tick(mouse_position, mouse_click_position)
