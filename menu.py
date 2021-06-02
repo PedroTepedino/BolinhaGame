@@ -101,7 +101,7 @@ class CreditsUi(AbstractUi):
         self.sands_text = Text(Point(405, 290), "Leonardo Areias: 22101570")
         self.sands_text.setSize(20)
 
-        self.zosin_text = Text(Point(405, 290), "Lucas Zoser: 22105593")
+        self.zosin_text = Text(Point(405, 320), "Lucas Zoser: 22105593")
         self.zosin_text.setSize(20)
 
         self.exit_button = Button(self.window, exit_credits_function, Vector(400, 450), Vector(75, 25), "Back")
@@ -116,6 +116,7 @@ class CreditsUi(AbstractUi):
         self.leo_bom_text.draw(self.window)
         self.mc_pose_text.draw(self.window)
         self.sands_text.draw(self.window)
+        self.zosin_text.draw(self.window)
 
         self.exit_button.draw()
 
@@ -129,6 +130,7 @@ class CreditsUi(AbstractUi):
         self.leo_bom_text.undraw()
         self.mc_pose_text.undraw()
         self.sands_text.undraw()
+        self.zosin_text.undraw()
 
         self.exit_button.undraw()
 

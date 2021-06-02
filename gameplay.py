@@ -147,7 +147,7 @@ class Gameplay(Scene):
             self.pause_ui.hide()
 
     def restart(self):
-        self.lives = 3
+        self.lives = 1
         self.lives_ui.current_lives = self.lives
 
         self.lost = False
@@ -225,17 +225,17 @@ class ScoreUi(AbstractUi):
         self.panel.setOutline("black")
         self.panel.setWidth(10)
 
-        self.restart_button = Button(window, restart_function, Vector(400, 275), Vector(75, 25), "Resume")
-        self.menu_button = Button(window, back_to_menu_function, Vector(400, 350), Vector(70, 20), "Menu")
-        self.exit_button = Button(window, exit_function, Vector(400, 425), Vector(70, 20), "Exit")
+        self.restart_button = Button(window, restart_function, Vector(400, 300), Vector(75, 25), "Restart")
+        self.menu_button = Button(window, back_to_menu_function, Vector(400, 375), Vector(70, 20), "Menu")
+        self.exit_button = Button(window, exit_function, Vector(400, 450), Vector(70, 20), "Exit")
 
-        self.title = Text(Point(405, 150), "Score:")
+        self.title = Text(Point(405, 125), "Score:")
         self.title.setSize(30)
 
         self.score_text = Text(Point(405, 175), "0")
         self.score_text.setSize(30)
 
-        self.highscore_text = Text(Point(405, 200), "0")
+        self.highscore_text = Text(Point(405, 225), "0")
         self.highscore_text.setSize(30)
 
     def show(self):
