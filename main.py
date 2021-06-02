@@ -24,7 +24,7 @@ class BolinhaGame:
         self.win.bind('<Motion>', motion)
 
         self.menu_scene = Menu(self.win, self.begin_gameplay, self.credits_switch, self.exit_game)
-        self.gameplay_scene = Gameplay(self.win, self.pause, self.back_to_menu, self.exit_game)
+        self.gameplay_scene = Gameplay(self.win, self.pause, self.back_to_menu, self.exit_game, self.restart)
 
         self.menu_scene.draw()
 
@@ -40,18 +40,21 @@ class BolinhaGame:
 
             mouse_position = current_mouse_position
 
-            if key == "Escape":
-                if type(self.current_scene) is Menu:
+            if type(self.current_scene) is Menu:
+                if key == "Escape":
                     self.playing = False
-                elif type(self.current_scene) is Gameplay:
-                    self.pause()
-            elif key == "Right" and type(self.current_scene) is Gameplay:
-                self.gameplay_scene.move_player("right")
-            elif key == 'Left' and type(self.current_scene) is Gameplay:
-                self.gameplay_scene.move_player("left")
+            elif type(self.current_scene) is Gameplay:
+                if key == "Escape":
+                    if not self.gameplay_scene.lost:
+                        self.pause()
+                elif key == "Right":
+                    self.gameplay_scene.move_player("right")
+                elif key == 'Left':
+                    self.gameplay_scene.move_player("left")
+                elif key == 'space':
+                    self.gameplay_scene.start_game()
 
             self.current_scene.tick(mouse_position, mouse_click)
-
             time.sleep(self.frame_rate)
         self.win.close()
 
@@ -69,6 +72,9 @@ class BolinhaGame:
 
     def pause(self):
         self.gameplay_scene.pause()
+
+    def restart(self):
+        print("restart")
 
     def change_scene(self, next_scene: str):
         self.current_scene.undraw()

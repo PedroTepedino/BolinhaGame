@@ -7,17 +7,24 @@ from score import Score
 
 class Ball:
 
-    def __init__(self, initial_position: Vector, radius: float, speed: float, initial_direction: Vector, score: Score):
+    def __init__(self, window: GraphWin, initial_position: Vector, radius: float, speed: float, initial_direction: Vector, score: Score, lose_life_function):
+        self.window = window
+
         self.initial_direction = initial_direction
         self.initial_position = initial_position
         self.radius = radius
         self.speed = speed
         self.score = score
 
+        self.is_alive = True
+        self.still_ball = True
+
         self.position = self.initial_position
         self.velocity = self.initial_direction * speed
 
         self.sprite = Circle(self.position.to_point(), self.radius)
+
+        self.damage = lose_life_function
 
     def draw(self, window: GraphWin):
         self.sprite.undraw()
@@ -29,21 +36,39 @@ class Ball:
         self.sprite.undraw()
 
     def reset(self):
-        self.position = self.initial_position
+        self.move_ball(self.initial_position)
         self.velocity = self.initial_direction * self.speed
+        self.is_alive = True
+        self.still_ball = True
 
-    def update(self, window: GraphWin, player: Player):
-        if self.position.x - self.radius <= 0 or self.position.x + self.radius >= window.width:
+    def release(self):
+        self.still_ball = False
+
+    def kill_ball(self):
+        pass
+
+    def update(self,  player: Player):
+        if self.still_ball:
+            self.move_ball(player.position + Vector(0, -(self.radius + 10)))
+            return
+
+        self.world_collide()
+        self.move_ball(self.collide_player(player))
+
+    def move_ball(self, new_position: Vector):
+        delta = new_position - self.position
+        self.sprite.move(delta.x, delta.y)
+        self.position = new_position
+
+    def world_collide(self):
+        if self.position.x - self.radius <= 0 or self.position.x + self.radius >= self.window.width:
             self.velocity = Vector(-self.velocity.x, self.velocity.y)
 
-        if self.position.y - self.radius <= 0 or self.position.y + self.radius >= window.height:
+        if self.position.y - self.radius <= 0 or self.position.y + self.radius >= self.window.height:
             self.velocity = Vector(self.velocity.x, -self.velocity.y)
 
-        new_position = self.collide_player(player)
-
-        self.sprite.move(new_position.x - self.position.x, new_position.y - self.position.y)
-
-        self.position = new_position
+            if self.position.y > self.window.height / 2:
+                self.damage()
 
     def collide_player(self, player: Player):
 

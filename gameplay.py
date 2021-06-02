@@ -3,22 +3,27 @@ from button import Button
 from player import Player
 from scene import Scene
 from graphics import *
-
+from abstractui import AbstractUi
 from score import Score
 from vector import Vector
 
 
 class Gameplay(Scene):
 
-    def __init__(self, window: GraphWin, unpause_function, back_to_menu_function, exit_function):
+    def __init__(self, window: GraphWin, unpause_function, back_to_menu_function, exit_function, restart_function):
         self.window = window
 
+        self.lives = 3
         self.paused = False
-        self.pause_ui = PauseUi(self.window, unpause_function, back_to_menu_function,  exit_function)
+        self.lost = False
+        self.started = False
 
         self.score = Score(self.window)
-        self.ball = Ball(Vector(400, 15), 10, 10, Vector(1, 1).normalized(), self.score)
+        self.ball = Ball(self.window, Vector(400, 15), 10, 10, Vector(1, -1).normalized(), self.score, self.lose_life)
         self.player = Player(Vector(400, 500), Vector(50, 3), 10)
+
+        self.score_ui = ScoreUi(self.window, restart_function, back_to_menu_function, exit_function, self.score)
+        self.pause_ui = PauseUi(self.window, unpause_function, back_to_menu_function, exit_function)
 
         self.linha_esquerda = Line(Point(0, 50), Point(0, 550))
         self.linha_direita = Line(Point(800, 50), Point(800, 550))
@@ -50,7 +55,7 @@ class Gameplay(Scene):
         self.window.setBackground('gray')
 
     def draw(self):
-        self.ball.reset()
+        self.restart()
 
         self.linha_superior.draw(self.window)
         self.linha_inferior.draw(self.window)
@@ -76,7 +81,9 @@ class Gameplay(Scene):
         self.player.undraw()
         self.ball.undraw()
         self.score.undraw()
+
         self.pause_ui.hide()
+        self.score_ui.hide()
 
         self.linha_superior.undraw()
         self.linha_inferior.undraw()
@@ -93,11 +100,13 @@ class Gameplay(Scene):
             self.diabins[i].undraw()
 
     def tick(self, mouse_position: Vector, mouse_click_position):
-        if not self.paused:
-            self.player.update(self.window)
-            self.ball.update(self.window, self.player)
-        else:
+        if self.lost:
+            self.score_ui.update(mouse_position, mouse_click_position)
+        elif self.paused:
             self.pause_ui.update(mouse_position, mouse_click_position)
+        else:
+            self.player.update(self.window)
+            self.ball.update(self.player)
 
     def move_player(self, direction: str):
         if self.paused:
@@ -116,8 +125,28 @@ class Gameplay(Scene):
         else:
             self.pause_ui.hide()
 
+    def restart(self):
+        self.lives = 3
+        self.lost = False
+        self.paused = False
+        self.started = False
+        self.score.reset()
+        self.ball.reset()
 
-class PauseUi:
+    def lose_life(self):
+        self.lives -= 1
+        self.ball.reset()
+
+        if self.lives <= 0:
+            self.lost = True
+            self.score_ui.show()
+
+    def start_game(self):
+        self.started = True
+        self.ball.release()
+
+
+class PauseUi(AbstractUi):
     def __init__(self, window: GraphWin, unpause_function, back_to_menu_function, exit_function):
         self.window = window
 
@@ -151,3 +180,80 @@ class PauseUi:
         self.resume_button.tick(mouse_position, mouse_click_position)
         self.menu_button.tick(mouse_position, mouse_click_position)
         self.exit_button.tick(mouse_position, mouse_click_position)
+
+
+class ScoreUi(AbstractUi):
+    def __init__(self,
+                 window: GraphWin,
+                 restart_function,
+                 back_to_menu_function,
+                 exit_function,
+                 score: Score):
+        self.window = window
+
+        self.score = score
+
+        self.panel = Rectangle(Point(200, 100), Point(600, 500))
+        self.panel.setFill(color_rgb(190, 190, 190))
+        self.panel.setOutline("black")
+        self.panel.setWidth(10)
+
+        self.restart_button = Button(window, restart_function, Vector(400, 275), Vector(75, 25), "Resume")
+        self.menu_button = Button(window, back_to_menu_function, Vector(400, 350), Vector(70, 20), "Menu")
+        self.exit_button = Button(window, exit_function, Vector(400, 425), Vector(70, 20), "Exit")
+
+        self.title = Text(Point(405, 150), "Score:")
+        self.title.setSize(30)
+
+        self.score_text = Text(Point(405, 175), "0")
+        self.title.setSize(30)
+
+    def show(self):
+        self.panel.draw(self.window)
+        self.restart_button.draw()
+        self.menu_button.draw()
+        self.exit_button.draw()
+        self.title.draw(self.window)
+        self.score_text.setText(f"{self.score.pts}")
+        self.score_text.draw(self.window)
+
+    def hide(self):
+        self.panel.undraw()
+        self.restart_button.undraw()
+        self.menu_button.undraw()
+        self.exit_button.undraw()
+        self.title.undraw()
+        self.score_text.undraw()
+
+    def update(self, mouse_position: Vector, mouse_click_position):
+        self.restart_button.tick(mouse_position, mouse_click_position)
+        self.menu_button.tick(mouse_position, mouse_click_position)
+        self.exit_button.tick(mouse_position, mouse_click_position)
+
+
+class LivesUi:
+    def __init__(self, window: GraphWin, max_lives: int, initial_position: Vector, spacing: Vector):
+        self.window = window
+
+        self.max_lives = max_lives
+        self.current_lives = max_lives
+
+        self.lives_sprites = []
+        for i in range(self.max_lives):
+            self.lives_sprites.append(Circle((initial_position + (spacing * i)).to_point(), 10))
+
+    def update_lives(self, lives: int):
+        self.hide()
+        self.current_lives = lives
+        self.show()
+
+    def show(self):
+        for i in range(self.current_lives):
+            if i < self.current_lives:
+                self.lives_sprites[i].draw(self.window)
+            else:
+                self.lives_sprites[i].undraw()
+
+    def hide(self):
+        for i in range(self.max_lives):
+            self.lives_sprites[i].undraw()
