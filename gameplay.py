@@ -32,7 +32,7 @@ class Gameplay(Scene):
         self.linha_inferior = Line(Point(0, 575), Point(800, 575))
         self.linha_superior = Line(Point(0, 25), Point(800, 25))
 
-        self.diabins = [Image(Point(200, 555), 'diabin.PNG'), Image(Point(600, 560), 'diabin.PNG')]
+        self.diabins = [Image(Point(200, 555), '_imagens/diabin.PNG'), Image(Point(600, 560), '_imagens/diabin.PNG')]
         self.clouds = []
         self.fogos = []
 
@@ -49,10 +49,10 @@ class Gameplay(Scene):
         self.linha_esquerda.setFill(color_rgb(50, 50, 50))
 
         for i in range(3):
-            self.fogos.append(Image(Point(150 + (300 * i), 575), 'fogo.PNG'))
+            self.fogos.append(Image(Point(150 + (300 * i), 575), '_imagens/fogo.PNG'))
 
         for i in range(4):
-            self.clouds.append(Image(Point(110 + (200 * i), 25), 'cloud.JPG'))
+            self.clouds.append(Image(Point(110 + (200 * i), 25), '_imagens/cloud.JPG'))
 
         self.window.setBackground('gray')
 

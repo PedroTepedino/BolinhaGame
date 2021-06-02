@@ -25,15 +25,15 @@ def draw_ui(window: GraphWin):
 
     fogos = []
     for i in range(3):
-        fogos.append(Image(Point(150 + (300 * i), 575), 'fogo.PNG'))
+        fogos.append(Image(Point(150 + (300 * i), 575), '_imagens/fogo.png'))
         fogos[i].draw(window)
 
     clouds = []
     for i in range(4):
-        clouds.append(Image(Point(110 + (200 * i), 25), 'cloud.JPG'))
+        clouds.append(Image(Point(110 + (200 * i), 25), '_imagens/cloud.jpg'))
         clouds[i].draw(window)
 
-    diabins = [Image(Point(200, 555), 'diabin.PNG'), Image(Point(600, 560), 'diabin.PNG')]
+    diabins = [Image(Point(200, 555), '_imagens/diabin.png'), Image(Point(600, 560), '_imagens/diabin.png')]
 
     for i in range(len(diabins)):
         diabins[i].draw(window)
