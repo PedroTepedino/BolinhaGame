@@ -1,3 +1,5 @@
+import random
+
 from ball import Ball
 from button import Button
 from player import Player
@@ -7,6 +9,7 @@ from abstractui import AbstractUi
 from score import Score
 from vector import Vector
 from highscore import HighScore
+from pointsquare import PointSquare
 
 
 class Gameplay(Scene):
@@ -24,9 +27,14 @@ class Gameplay(Scene):
         self.ball = Ball(self.window, Vector(400, 15), 10, 10, Vector(1, -1).normalized(), self.score, self.lose_life)
         self.player = Player(Vector(400, 500), Vector(50, 3), 10)
 
+        self.squares = []
+
+        for i in range(15):
+            self.squares.append(PointSquare(self.window, Vector(50 + (50 * i), 200), Vector(20, 10), color_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))))
+
         self.score_ui = ScoreUi(self.window, restart_function, back_to_menu_function, exit_function, self.score, highscore)
         self.pause_ui = PauseUi(self.window, unpause_function, back_to_menu_function, exit_function)
-        self.lives_ui = LivesUi(self.window, self.lives, Vector(10, 10), Vector(20, 0))
+        self.lives_ui = LivesUi(self.window, self.lives, Vector(15, 15), Vector(25, 0))
 
         self.linha_esquerda = Line(Point(0, 50), Point(0, 550))
         self.linha_direita = Line(Point(800, 50), Point(800, 550))
@@ -76,6 +84,9 @@ class Gameplay(Scene):
 
         self.lives_ui.show()
 
+        for square in self.squares:
+            square.show()
+
         self.player.draw(self.window)
         self.ball.draw(self.window)
         self.score.draw()
@@ -87,6 +98,9 @@ class Gameplay(Scene):
         self.player.undraw()
         self.ball.undraw()
         self.score.undraw()
+
+        for square in self.squares:
+            square.hide()
 
         self.pause_ui.hide()
         self.score_ui.hide()
@@ -113,7 +127,7 @@ class Gameplay(Scene):
             self.pause_ui.update(mouse_position, mouse_click_position)
         else:
             self.player.update(self.window)
-            self.ball.update(self.player)
+            self.ball.update(self.player, self.squares)
 
     def move_player(self, direction: str):
         if self.paused:
@@ -260,8 +274,7 @@ class LivesUi:
 
         self.lives_sprites = []
         for i in range(self.max_lives):
-            self.lives_sprites.append(Circle((initial_position + (spacing * i)).to_point(), 10))
-            self.lives_sprites[i].setFill("green")
+            self.lives_sprites.append(Image((initial_position + (spacing * i)).to_point(), "_imagens/coracao.png"))
 
     def update_lives(self, lives: int):
         self.hide()

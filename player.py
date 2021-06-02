@@ -1,11 +1,11 @@
 from graphics import *
 from vector import Vector
+from box import Box
 
 
-class Player:
+class Player(Box):
     def __init__(self, pos: Vector, half_size: Vector, speed: float):
-        self.position: Vector = pos
-        self.half_size = half_size
+        super().__init__(pos, half_size)
         self.speed = speed
         self.sprite = Rectangle((pos + half_size).to_point(), (pos - half_size).to_point())
         self.move_velocity = Vector(1, 0) * speed

@@ -1,5 +1,10 @@
+from typing import Sequence
+
 from graphics import GraphWin
 from graphics import Circle
+
+from box import Box
+from pointsquare import PointSquare
 from vector import Vector
 from player import Player
 from score import Score
@@ -47,13 +52,31 @@ class Ball:
     def kill_ball(self):
         pass
 
-    def update(self,  player: Player):
+    def update(self, player: Player, squares: Sequence[PointSquare]):
         if self.still_ball:
             self.move_ball(player.position + Vector(0, -(self.radius + 10)))
             return
 
         self.world_collide()
-        self.move_ball(self.collide_player(player))
+
+        potential_position = self.position + self.velocity
+
+        new_potential_position, collided = self.collide_player(player)
+
+        if collided:
+            potential_position = new_potential_position
+        else:
+            for square in squares:
+                if not square.is_active:
+                    continue
+
+                new_potential_position, collided = self.collide_player(square)
+                if collided:
+                    square.hit()
+                    potential_position = new_potential_position
+                    break
+
+        self.move_ball(potential_position)
 
     def move_ball(self, new_position: Vector):
         delta = new_position - self.position
@@ -70,15 +93,16 @@ class Ball:
             if self.position.y > self.window.height / 2:
                 self.damage()
 
-    def collide_player(self, player: Player):
+    def collide_player(self, box_collider: Box):
 
         potential_position = self.position + self.velocity
+        collided = False
 
         nearest_point = Vector(0, 0)
-        nearest_point.x = max(player.position.x - player.half_size.x,
-                              min(potential_position.x, player.position.x + player.half_size.x))
-        nearest_point.y = max(player.position.y - player.half_size.y,
-                              min(potential_position.y, player.position.y + player.half_size.y))
+        nearest_point.x = max(box_collider.position.x - box_collider.half_size.x,
+                              min(potential_position.x, box_collider.position.x + box_collider.half_size.x))
+        nearest_point.y = max(box_collider.position.y - box_collider.half_size.y,
+                              min(potential_position.y, box_collider.position.y + box_collider.half_size.y))
 
         ray_to_nearest = nearest_point - potential_position
         overlap = self.radius - ray_to_nearest.mag()
@@ -89,15 +113,15 @@ class Ball:
         if overlap >= 0:
             potential_position = potential_position - (ray_to_nearest.normalized() * overlap)
 
-            right = (Vector(1, 0)).cos_angle(potential_position - player.position)
-            right_rec = (Vector(1, 0)).cos_angle(Vector(player.half_size.x, -player.half_size.y))
-            left_rec = (Vector(1, 0)).cos_angle(Vector(-player.half_size.x, -player.half_size.y))
+            right = (Vector(1, 0)).cos_angle(potential_position - box_collider.position)
+            right_rec = (Vector(1, 0)).cos_angle(Vector(box_collider.half_size.x, -box_collider.half_size.y))
+            left_rec = (Vector(1, 0)).cos_angle(Vector(-box_collider.half_size.x, -box_collider.half_size.y))
 
             collided_top = left_rec <= right <= right_rec
 
-            top = (Vector(0, 1)).cos_angle(potential_position - player.position)
-            down_rec = (Vector(0, 1)).cos_angle(Vector(-player.half_size.x, player.half_size.y))
-            top_rec = (Vector(0, 1)).cos_angle(Vector(-player.half_size.x, -player.half_size.y))
+            top = (Vector(0, 1)).cos_angle(potential_position - box_collider.position)
+            down_rec = (Vector(0, 1)).cos_angle(Vector(-box_collider.half_size.x, box_collider.half_size.y))
+            top_rec = (Vector(0, 1)).cos_angle(Vector(-box_collider.half_size.x, -box_collider.half_size.y))
 
             collided_right = top_rec <= top <= down_rec
 
@@ -112,5 +136,6 @@ class Ball:
                 # self.velocity = self.velocity.normalized() * self.speed
 
             self.score.add_score()
+            collided = True
 
-        return potential_position
+        return potential_position, collided
