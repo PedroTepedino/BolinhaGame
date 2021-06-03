@@ -140,6 +140,7 @@ class Gameplay(Scene):
 
         if self.lives <= 0:
             self.lost = True
+            self.score_ui.check_win(self.score)
             self.score_ui.show()
 
     def start_game(self):
@@ -214,8 +215,13 @@ class ScoreUi(AbstractUi):
         self.highscore_text = Text(Point(405, 225), "0")
         self.highscore_text.setSize(30)
 
+        self.winImage = Image(Point(400, 300), "_imagens/aproves.png")
+        self.win = False
+
     def show(self):
         self.panel.draw(self.window)
+        if self.win:
+            self.winImage.draw(self.window)
         self.restart_button.draw()
         self.menu_button.draw()
         self.exit_button.draw()
@@ -228,18 +234,25 @@ class ScoreUi(AbstractUi):
 
     def hide(self):
         self.panel.undraw()
+        self.winImage.undraw()
         self.restart_button.undraw()
         self.menu_button.undraw()
         self.exit_button.undraw()
         self.title.undraw()
         self.score_text.undraw()
         self.highscore_text.undraw()
+        self.win = False
 
     def update(self, mouse_position: Vector, mouse_click_position):
         self.restart_button.tick(mouse_position, mouse_click_position)
         self.menu_button.tick(mouse_position, mouse_click_position)
         self.exit_button.tick(mouse_position, mouse_click_position)
+        
+    def check_win(self, score: Score):
+        if score.pts >= 120:
+            self.win = True
 
+            
 
 class LivesUi:
     def __init__(self, window: GraphWin, max_lives: int, initial_position: Vector, spacing: Vector):
