@@ -27,7 +27,7 @@ class Menu(Scene):
         self.play_button = Button(window, play_func, Vector(400, 275), Vector(75, 25), "Play")
         self.credits_button = Button(window, credits_func, Vector(400, 350), Vector(75, 25), "Credits")
         self.exit_button = Button(window, exit_func, Vector(400, 425), Vector(75, 25), "Exit")
-
+        self.background = Image(Point(400, 300), "_imagens/fundinhodecria.png")
         self.bolas = []
 
         for _ in range(50):
@@ -41,12 +41,14 @@ class Menu(Scene):
         self.win.setBackground('gray')
 
     def draw(self):
+        self.background.draw(self.win)
         for bola in self.bolas:
             bola.draw()
         self.title.draw(self.win)
         self.play_button.draw()
         self.credits_button.draw()
         self.exit_button.draw()
+
 
     def undraw(self):
         for bola in self.bolas:
@@ -56,6 +58,7 @@ class Menu(Scene):
         self.credits_button.undraw()
         self.exit_button.undraw()
         self.credits_ui.hide()
+        self.background.undraw()
 
     def tick(self, mouse_position: Vector, mouse_click_position):
         if not self.credits_ui.is_open:
