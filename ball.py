@@ -49,9 +49,6 @@ class Ball:
     def release(self):
         self.still_ball = False
 
-    def kill_ball(self):
-        pass
-
     def update(self, player: Player, squares: Sequence[PointSquare]):
         if self.still_ball:
             self.move_ball(player.position + Vector(0, -(self.radius + 10)))
@@ -98,6 +95,11 @@ class Ball:
         potential_position = self.position + self.velocity
         collided = False
 
+        if type(box_collider) is Player:
+            is_player = True
+        else :
+            is_player = False
+
         nearest_point = Vector(0, 0)
         nearest_point.x = max(box_collider.position.x - box_collider.half_size.x,
                               min(potential_position.x, box_collider.position.x + box_collider.half_size.x))
@@ -110,7 +112,7 @@ class Ball:
         if ray_to_nearest.mag() == 0:
             overlap = 0
 
-        if overlap >= 0:
+        if overlap > 0:
             potential_position = potential_position - (ray_to_nearest.normalized() * overlap)
 
             right = (Vector(1, 0)).cos_angle(potential_position - box_collider.position)
@@ -126,16 +128,21 @@ class Ball:
             collided_right = top_rec <= top <= down_rec
 
             if collided_top:
-                self.velocity = Vector(self.velocity.x, -self.velocity.y)
+                if not is_player:
+                    self.velocity = Vector(self.velocity.x, -self.velocity.y)
+                else:
+                    self.velocity = (potential_position - box_collider.position).normalized() * self.speed
                 # self.speed += 10
                 # self.velocity = self.velocity.normalized() * self.speed
 
-            if collided_right:
+            elif collided_right:
                 self.velocity = Vector(-self.velocity.x, self.velocity.y)
                 # self.speed += 10
                 # self.velocity = self.velocity.normalized() * self.speed
 
-            self.score.add_score()
+            if not is_player:
+                self.score.add_score()
+
             collided = True
 
         return potential_position, collided

@@ -10,11 +10,13 @@ from score import Score
 from vector import Vector
 from highscore import HighScore
 from pointsquare import PointSquare
+from helperfunctions import get_random_color
 
 
 class Gameplay(Scene):
 
-    def __init__(self, window: GraphWin, unpause_function, back_to_menu_function, exit_function, restart_function, highscore: HighScore):
+    def __init__(self, window: GraphWin, unpause_function, back_to_menu_function, exit_function, restart_function,
+                 highscore: HighScore):
         self.window = window
 
         self.lives = 3
@@ -29,10 +31,12 @@ class Gameplay(Scene):
 
         self.squares = []
 
-        for i in range(15):
-            self.squares.append(PointSquare(self.window, Vector(50 + (50 * i), 200), Vector(20, 10), color_rgb(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))))
+        for j in range(8):
+            for i in range(15):
+                self.squares.append(PointSquare(self.window, Vector(50 * (i + 1), 250 - (j * 25)), Vector(25, 12.5), get_random_color()))
 
-        self.score_ui = ScoreUi(self.window, restart_function, back_to_menu_function, exit_function, self.score, highscore)
+        self.score_ui = ScoreUi(self.window, restart_function, back_to_menu_function, exit_function, self.score,
+                                highscore)
         self.pause_ui = PauseUi(self.window, unpause_function, back_to_menu_function, exit_function)
         self.lives_ui = LivesUi(self.window, self.lives, Vector(15, 15), Vector(25, 0))
 
@@ -66,8 +70,6 @@ class Gameplay(Scene):
         self.window.setBackground('gray')
 
     def draw(self):
-        self.restart()
-
         self.linha_superior.draw(self.window)
         self.linha_inferior.draw(self.window)
         self.linha_direita.draw(self.window)
@@ -91,6 +93,7 @@ class Gameplay(Scene):
         self.ball.draw(self.window)
         self.score.draw()
 
+        self.restart()
 
     def undraw(self):
         self.paused = False
@@ -147,7 +150,7 @@ class Gameplay(Scene):
             self.pause_ui.hide()
 
     def restart(self):
-        self.lives = 1
+        self.lives = 3
         self.lives_ui.current_lives = self.lives
 
         self.lost = False
@@ -156,6 +159,15 @@ class Gameplay(Scene):
 
         self.score.reset()
         self.ball.reset()
+
+        for square in self.squares:
+            square.reset()
+            square.hide()
+            square.show()
+
+        self.score_ui.hide()
+        self.pause_ui.hide()
+        self.lives_ui.hide()
 
     def lose_life(self):
         self.lives -= 1
