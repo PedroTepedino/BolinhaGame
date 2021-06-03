@@ -104,6 +104,12 @@ class CreditsUi(AbstractUi):
         self.zosin_text = Text(Point(405, 320), "Lucas Zoser: 22105593")
         self.zosin_text.setSize(20)
 
+        self.vinil_text = Text(Point(405, 350), "Luiz Paulo França: 22106861")
+        self.vinil_text.setSize(20)
+
+        self.ricardao_text = Text(Point(405, 380), "Ricardo Pascotini: 22105830")
+        self.ricardao_text.setSize(20)
+
         self.exit_button = Button(self.window, exit_credits_function, Vector(400, 450), Vector(75, 25), "Back")
 
     def show(self):
@@ -117,6 +123,8 @@ class CreditsUi(AbstractUi):
         self.mc_pose_text.draw(self.window)
         self.sands_text.draw(self.window)
         self.zosin_text.draw(self.window)
+        self.vinil_text.draw(self.window)
+        self.ricardao_text.draw(self.window)
 
         self.exit_button.draw()
 
@@ -131,6 +139,8 @@ class CreditsUi(AbstractUi):
         self.mc_pose_text.undraw()
         self.sands_text.undraw()
         self.zosin_text.undraw()
+        self.vinil_text.undraw()
+        self.ricardao_text.undraw()
 
         self.exit_button.undraw()
 

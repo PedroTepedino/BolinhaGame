@@ -3,6 +3,7 @@ from typing import Sequence
 from graphics import GraphWin
 from graphics import Circle
 
+import player
 from box import Box
 from pointsquare import PointSquare
 from vector import Vector
@@ -18,7 +19,8 @@ class Ball:
         self.initial_direction = initial_direction
         self.initial_position = initial_position
         self.radius = radius
-        self.speed = speed
+        self.initial_speed = speed
+        self.current_speed = speed
         self.score = score
 
         self.is_alive = True
@@ -42,9 +44,10 @@ class Ball:
 
     def reset(self):
         self.move_ball(self.initial_position)
-        self.velocity = self.initial_direction * self.speed
+        self.velocity = self.initial_direction * self.initial_speed
         self.is_alive = True
         self.still_ball = True
+        self.current_speed = self.initial_speed
 
     def release(self):
         self.still_ball = False
@@ -131,17 +134,15 @@ class Ball:
                 if not is_player:
                     self.velocity = Vector(self.velocity.x, -self.velocity.y)
                 else:
-                    self.velocity = (potential_position - box_collider.position).normalized() * self.speed
-                # self.speed += 10
-                # self.velocity = self.velocity.normalized() * self.speed
-
+                    self.velocity = (potential_position - box_collider.position).normalized() * self.current_speed
             elif collided_right:
                 self.velocity = Vector(-self.velocity.x, self.velocity.y)
-                # self.speed += 10
-                # self.velocity = self.velocity.normalized() * self.speed
 
             if not is_player:
                 self.score.add_score()
+                self.current_speed += 0.5
+
+            self.velocity = self.velocity.normalized() * self.current_speed
 
             collided = True
 

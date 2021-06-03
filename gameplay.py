@@ -26,7 +26,7 @@ class Gameplay(Scene):
 
         self.score = Score(self.window)
 
-        self.ball = Ball(self.window, Vector(400, 15), 10, 10, Vector(1, -1).normalized(), self.score, self.lose_life)
+        self.ball = Ball(self.window, Vector(400, 300), 10, 5, Vector(1, -1).normalized(), self.score, self.lose_life)
         self.player = Player(Vector(400, 500), Vector(50, 3), 10)
 
         self.squares = []
@@ -131,6 +131,7 @@ class Gameplay(Scene):
         else:
             self.player.update(self.window)
             self.ball.update(self.player, self.squares)
+            self.player.change_speed((self.ball.current_speed - self.ball.initial_speed) / 2)
 
     def move_player(self, direction: str):
         if self.paused:
@@ -159,6 +160,7 @@ class Gameplay(Scene):
 
         self.score.reset()
         self.ball.reset()
+        self.player.reset()
 
         for square in self.squares:
             square.reset()
@@ -168,6 +170,8 @@ class Gameplay(Scene):
         self.score_ui.hide()
         self.pause_ui.hide()
         self.lives_ui.hide()
+
+        self.lives_ui.show()
 
     def lose_life(self):
         self.lives -= 1
