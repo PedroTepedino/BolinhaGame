@@ -40,49 +40,12 @@ class Gameplay(Scene):
         self.pause_ui = PauseUi(self.window, unpause_function, back_to_menu_function, exit_function)
         self.lives_ui = LivesUi(self.window, self.lives, Vector(15, 15), Vector(25, 0))
 
-        self.linha_esquerda = Line(Point(0, 50), Point(0, 550))
-        self.linha_direita = Line(Point(800, 50), Point(800, 550))
-        self.linha_inferior = Line(Point(0, 575), Point(800, 575))
-        self.linha_superior = Line(Point(0, 25), Point(800, 25))
-
-        self.diabins = [Image(Point(200, 555), '_imagens/diabin.PNG'), Image(Point(600, 560), '_imagens/diabin.PNG')]
-        self.clouds = []
-        self.fogos = []
-
-        self.linha_superior.setWidth(50)
-        self.linha_superior.setFill(color_rgb(50, 50, 180))
-
-        self.linha_inferior.setWidth(50)
-        self.linha_inferior.setFill(color_rgb(250, 80, 80))
-
-        self.linha_direita.setWidth(25)
-        self.linha_direita.setFill(color_rgb(50, 50, 50))
-
-        self.linha_esquerda.setWidth(25)
-        self.linha_esquerda.setFill(color_rgb(50, 50, 50))
-
-        for i in range(3):
-            self.fogos.append(Image(Point(150 + (300 * i), 575), '_imagens/fogo.PNG'))
-
-        for i in range(4):
-            self.clouds.append(Image(Point(110 + (200 * i), 25), '_imagens/cloud.JPG'))
+        self.background = Image(Point(400, 300), "_imagens/fundozozin.png")
 
         self.window.setBackground('gray')
 
     def draw(self):
-        self.linha_superior.draw(self.window)
-        self.linha_inferior.draw(self.window)
-        self.linha_direita.draw(self.window)
-        self.linha_esquerda.draw(self.window)
-
-        for i in range(3):
-            self.fogos[i].draw(self.window)
-
-        for i in range(4):
-            self.clouds[i].draw(self.window)
-
-        for i in range(len(self.diabins)):
-            self.diabins[i].draw(self.window)
+        self.background.draw(self.window)
 
         self.lives_ui.show()
 
@@ -109,19 +72,7 @@ class Gameplay(Scene):
         self.score_ui.hide()
         self.lives_ui.hide()
 
-        self.linha_superior.undraw()
-        self.linha_inferior.undraw()
-        self.linha_direita.undraw()
-        self.linha_esquerda.undraw()
-
-        for i in range(3):
-            self.fogos[i].undraw()
-
-        for i in range(4):
-            self.clouds[i].undraw()
-
-        for i in range(len(self.diabins)):
-            self.diabins[i].undraw()
+        self.background.undraw()
 
     def tick(self, mouse_position: Vector, mouse_click_position):
         if self.lost:
@@ -132,6 +83,15 @@ class Gameplay(Scene):
             self.player.update(self.window)
             self.ball.update(self.player, self.squares)
             self.player.change_speed((self.ball.current_speed - self.ball.initial_speed) / 2)
+
+            has_active_square = False
+            for squares in self.squares:
+                if squares.is_active:
+                    has_active_square = True
+                    break
+                    
+            if not has_active_square:
+                self.lose_life(3)
 
     def move_player(self, direction: str):
         if self.paused:
@@ -173,8 +133,8 @@ class Gameplay(Scene):
 
         self.lives_ui.show()
 
-    def lose_life(self):
-        self.lives -= 1
+    def lose_life(self, l: int = 1):
+        self.lives -= l
         self.ball.reset()
         self.lives_ui.update_lives(self.lives)
 

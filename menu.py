@@ -86,29 +86,18 @@ class CreditsUi(AbstractUi):
         self.panel.setOutline("black")
         self.panel.setWidth(10)
 
-        self.title = Text(Point(405, 150), "Credits")
+        self.title = Text(Point(405, 140), "Credits")
         self.title.setSize(30)
 
-        self.tepe_text = Text(Point(405, 200), "Pedro Tepedino: 22105631")
+        self.tepe_text = Text(Point(400, 290), "Leonardo Areias:   22101570\n"
+                                               "Leonardo Benttes:  22103833\n"
+                                               "Alexandre Beck:    22104778\n"
+                                               "Lucas Zoser:       22105593\n"
+                                               "Pedro Tepedino:    22105631\n"
+                                               "Ricardo Pascotini: 22105830\n"
+                                               "Rodrigo Alaor:     22106118\n"
+                                               "Luiz Paulo França: 22106861")
         self.tepe_text.setSize(20)
-
-        self.leo_bom_text = Text(Point(405, 230), "Leonardo Benttes: 22103833")
-        self.leo_bom_text.setSize(20)
-
-        self.mc_pose_text = Text(Point(405, 260), "Alexandre Beck: 22104778")
-        self.mc_pose_text.setSize(20)
-
-        self.sands_text = Text(Point(405, 290), "Leonardo Areias: 22101570")
-        self.sands_text.setSize(20)
-
-        self.zosin_text = Text(Point(405, 320), "Lucas Zoser: 22105593")
-        self.zosin_text.setSize(20)
-
-        self.vinil_text = Text(Point(405, 350), "Luiz Paulo França: 22106861")
-        self.vinil_text.setSize(20)
-
-        self.ricardao_text = Text(Point(405, 380), "Ricardo Pascotini: 22105830")
-        self.ricardao_text.setSize(20)
 
         self.exit_button = Button(self.window, exit_credits_function, Vector(400, 450), Vector(75, 25), "Back")
 
@@ -119,12 +108,6 @@ class CreditsUi(AbstractUi):
         self.title.draw(self.window)
 
         self.tepe_text.draw(self.window)
-        self.leo_bom_text.draw(self.window)
-        self.mc_pose_text.draw(self.window)
-        self.sands_text.draw(self.window)
-        self.zosin_text.draw(self.window)
-        self.vinil_text.draw(self.window)
-        self.ricardao_text.draw(self.window)
 
         self.exit_button.draw()
 
@@ -135,13 +118,6 @@ class CreditsUi(AbstractUi):
         self.title.undraw()
 
         self.tepe_text.undraw()
-        self.leo_bom_text.undraw()
-        self.mc_pose_text.undraw()
-        self.sands_text.undraw()
-        self.zosin_text.undraw()
-        self.vinil_text.undraw()
-        self.ricardao_text.undraw()
-
         self.exit_button.undraw()
 
     def update(self, mouse_position: Vector, mouse_click_position):

@@ -69,6 +69,8 @@ class Ball:
             for square in squares:
                 if not square.is_active:
                     continue
+                if (square.position - self.position).mag() >= 10 * self.current_speed:
+                    continue
 
                 new_potential_position, collided = self.collide_player(square)
                 if collided:
@@ -140,7 +142,7 @@ class Ball:
 
             if not is_player:
                 self.score.add_score()
-                self.current_speed += 0.5
+                self.current_speed += 0.1
 
             self.velocity = self.velocity.normalized() * self.current_speed
 
