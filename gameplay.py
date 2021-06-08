@@ -26,7 +26,7 @@ class Gameplay(Scene):
 
         self.score = Score(self.window)
 
-        self.ball = Ball(self.window, Vector(400, 300), 10, 5, Vector(1, -1).normalized(), self.score, self.lose_life)
+        self.ball = Ball(self.window, Vector(400, 300), 10, 2, Vector(1, -1).normalized(), self.score, self.lose_life)
         self.player = Player(Vector(400, 500), Vector(50, 3), 10)
 
         self.squares = []

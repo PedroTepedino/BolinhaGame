@@ -1,3 +1,4 @@
+import math
 from typing import Sequence
 
 from graphics import GraphWin
@@ -69,8 +70,6 @@ class Ball:
             for square in squares:
                 if not square.is_active:
                     continue
-                if (square.position - self.position).mag() >= 10 * self.current_speed:
-                    continue
 
                 new_potential_position, collided = self.collide_player(square)
                 if collided:
@@ -102,7 +101,7 @@ class Ball:
 
         if type(box_collider) is Player:
             is_player = True
-        else :
+        else:
             is_player = False
 
         nearest_point = Vector(0, 0)
@@ -137,7 +136,8 @@ class Ball:
                     self.velocity = Vector(self.velocity.x, -self.velocity.y)
                 else:
                     self.velocity = (potential_position - box_collider.position).normalized() * self.current_speed
-            elif collided_right:
+
+            if collided_right:
                 self.velocity = Vector(-self.velocity.x, self.velocity.y)
 
             if not is_player:

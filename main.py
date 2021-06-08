@@ -35,7 +35,7 @@ class BolinhaGame:
     def __init__(self):
         self.current_mouse_position = Vector(0, 0)
         self.playing = True
-        self.frame_rate = 0.01
+        self.frame_rate = 0.001
 
         self.win = GraphWin("Bolinha Game", 800, 600)
         self.win.bind_all("<KeyRelease>", key_released)
