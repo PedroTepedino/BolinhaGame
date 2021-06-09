@@ -149,7 +149,7 @@ class Ball:
 
             if not is_player:
                 self.score.add_score()
-                self.current_speed += 0.1
+                self.current_speed += 10
 
             self.velocity = self.velocity.normalized() * self.current_speed
 

@@ -87,9 +87,9 @@ class BolinhaGame:
             current_key = ""
 
             self.current_scene.tick(mouse_position, mouse_click, self.current_frame_delta)
-
-            if self.frame_rate > time.time()- self.start_frame:
-                time.sleep(self.frame_rate - time.time() - self.start_frame)
+            current_time = time.time()
+            if self.frame_rate > current_time - self.start_frame:
+                time.sleep(self.frame_rate - (current_time - self.start_frame))
             
             self.end_frame = time.time()
 
