@@ -35,7 +35,7 @@ class BolinhaGame:
     def __init__(self):
         self.current_mouse_position = Vector(0, 0)
         self.playing = True
-        self.frame_rate = 0.001
+        self.frame_rate = 0.01
 
         self.win = GraphWin("Bolinha Game", 800, 600)
         self.win.bind_all("<KeyRelease>", key_released)
@@ -53,13 +53,19 @@ class BolinhaGame:
         self.current_scene = self.menu_scene
         self.last_key = ""
 
+        self.current_frame_delta = self.frame_rate
+
     def main(self):
         global current_key
         global held_key
 
+        self.longest_frame = -1
+
         while self.playing:
             if self.win.isClosed():
                 break
+
+            self.start_frame = time.time()
 
             mouse_click = self.win.checkMouse()
             mouse_position = current_mouse_position
@@ -72,16 +78,23 @@ class BolinhaGame:
                     if not self.gameplay_scene.lost:
                         self.pause()
                 elif held_key == "Right":
-                    self.gameplay_scene.move_player("right")
+                    self.gameplay_scene.move_player("right", self.current_frame_delta)
                 elif held_key == 'Left':
-                    self.gameplay_scene.move_player("left")
+                    self.gameplay_scene.move_player("left", self.current_frame_delta)
                 elif current_key == 'space':
                     self.gameplay_scene.start_game()
 
             current_key = ""
 
-            self.current_scene.tick(mouse_position, mouse_click)
-            time.sleep(self.frame_rate)
+            self.current_scene.tick(mouse_position, mouse_click, self.current_frame_delta)
+
+            if self.frame_rate > time.time()- self.start_frame:
+                time.sleep(self.frame_rate - time.time() - self.start_frame)
+            
+            self.end_frame = time.time()
+
+            self.current_frame_delta = self.end_frame - self.start_frame
+                   
         self.win.close()
 
     def begin_gameplay(self):

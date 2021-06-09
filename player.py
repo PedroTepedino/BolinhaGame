@@ -22,11 +22,11 @@ class Player(Box):
     def undraw(self):
         self.sprite.undraw()
 
-    def move_right(self):
-        self.new_position = self.position + self.move_velocity
+    def move_right(self, elapsed_time: float):
+        self.new_position = self.position + (self.move_velocity * elapsed_time) 
 
-    def move_left(self):
-        self.new_position = self.position - self.move_velocity
+    def move_left(self, elapsed_time: float):
+        self.new_position = self.position - (self.move_velocity * elapsed_time)
 
     def update(self, window: GraphWin):
         self.move_velocity = self.move_velocity.normalized() * self.current_speed

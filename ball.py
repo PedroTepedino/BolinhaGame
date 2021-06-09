@@ -53,16 +53,16 @@ class Ball:
     def release(self):
         self.still_ball = False
 
-    def update(self, player: Player, squares: Sequence[PointSquare]):
+    def update(self, elapsed_time: float, player: Player, squares: Sequence[PointSquare]):
         if self.still_ball:
             self.move_ball(player.position + Vector(0, -(self.radius + 10)))
             return
 
         self.world_collide()
 
-        potential_position = self.position + self.velocity
+        potential_position = self.position + (self.velocity * elapsed_time)
 
-        new_potential_position, collided = self.collide_player(player)
+        new_potential_position, collided = self.collide_player(player, potential_position)
 
         if collided:
             potential_position = new_potential_position
@@ -71,7 +71,7 @@ class Ball:
                 if not square.is_active:
                     continue
 
-                new_potential_position, collided = self.collide_player(square)
+                new_potential_position, collided = self.collide_player(square, potential_position)
                 if collided:
                     square.hit()
                     potential_position = new_potential_position
@@ -88,15 +88,22 @@ class Ball:
         if self.position.x - self.radius <= 0 or self.position.x + self.radius >= self.window.width:
             self.velocity = Vector(-self.velocity.x, self.velocity.y)
 
+            if self.position.x > self.window.width / 2:
+                self.move_ball(Vector(self.window.width - (self.radius + 5),self.position.y))
+            else :
+                self.move_ball(Vector(0 + (self.radius + 5),self.position.y))
+
         if self.position.y - self.radius <= 0 or self.position.y + self.radius >= self.window.height:
             self.velocity = Vector(self.velocity.x, -self.velocity.y)
-
+            
             if self.position.y > self.window.height / 2:
                 self.damage()
+            else:
+                self.move_ball(Vector(self.position.x, 0 + self.radius + 5))
 
-    def collide_player(self, box_collider: Box):
+    def collide_player(self, box_collider: Box, potential_position):
 
-        potential_position = self.position + self.velocity
+        # potential_position = self.position + self.velocity
         collided = False
 
         if type(box_collider) is Player:

@@ -26,8 +26,8 @@ class Gameplay(Scene):
 
         self.score = Score(self.window)
 
-        self.ball = Ball(self.window, Vector(400, 300), 10, 2, Vector(1, -1).normalized(), self.score, self.lose_life)
-        self.player = Player(Vector(400, 500), Vector(50, 3), 10)
+        self.ball = Ball(self.window, Vector(400, 300), 10, 500, Vector(1, -1).normalized(), self.score, self.lose_life)
+        self.player = Player(Vector(400, 500), Vector(50, 3), 1000)
 
         self.squares = []
 
@@ -74,14 +74,14 @@ class Gameplay(Scene):
 
         self.background.undraw()
 
-    def tick(self, mouse_position: Vector, mouse_click_position):
+    def tick(self, mouse_position: Vector, mouse_click_position, elapsed_time: float):
         if self.lost:
             self.score_ui.update(mouse_position, mouse_click_position)
         elif self.paused:
             self.pause_ui.update(mouse_position, mouse_click_position)
         else:
             self.player.update(self.window)
-            self.ball.update(self.player, self.squares)
+            self.ball.update(elapsed_time, self.player, self.squares)
             self.player.change_speed((self.ball.current_speed - self.ball.initial_speed) / 2)
 
             has_active_square = False
@@ -93,14 +93,14 @@ class Gameplay(Scene):
             if not has_active_square:
                 self.lose_life(3)
 
-    def move_player(self, direction: str):
+    def move_player(self, direction: str, elapesed_time: float):
         if self.paused:
             return
 
         if direction == "right":
-            self.player.move_right()
+            self.player.move_right(elapesed_time)
         elif direction == "left":
-            self.player.move_left()
+            self.player.move_left(elapesed_time)
 
     def pause(self):
         self.paused = not self.paused

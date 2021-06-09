@@ -13,6 +13,6 @@ class Scene(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def tick(self, mouse_position: Vector, mouse_click_position):
+    def tick(self, mouse_position: Vector, mouse_click_position, elapsed_time: float):
         pass
 

@@ -60,7 +60,7 @@ class Menu(Scene):
         self.credits_ui.hide()
         self.background.undraw()
 
-    def tick(self, mouse_position: Vector, mouse_click_position):
+    def tick(self, mouse_position: Vector, mouse_click_position, elapsed_time: float):
         if not self.credits_ui.is_open:
             self.play_button.tick(mouse_position, mouse_click_position)
             self.credits_button.tick(mouse_position, mouse_click_position)
