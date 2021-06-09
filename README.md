@@ -1,2 +1,2 @@
 # BolinhaGame
-Bolinha game da Galera
+Run the main.py script to run the game.
